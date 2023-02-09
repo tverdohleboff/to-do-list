@@ -11,7 +11,9 @@ function App() {
   return (
     <div className='App'>
       <div className='lists'>
-        <FutureTasks tasks={futureTasks} />
+        <FutureTasks 
+        updateTask={setFutureTasks}
+        tasks={futureTasks} />
         <CompletedTasks />
       </div>
       <div className='form'>

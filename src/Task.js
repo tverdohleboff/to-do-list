@@ -1,14 +1,17 @@
 import React from 'react';
+import CheckBoxSwitchStatus from './CheckBoxSwitchStatus';
 
 function Task(props) {
   const {
     name,
-    date
+    date,
+    status
   } = props;
 
   return (
     <div className='Task'>
-      <div className='Name'>{name}</div>
+      <CheckBoxSwitchStatus />
+      <div className='Name'>{name} + {status}</div>
       <div className='Date'>{date}</div>
     </div>
   );

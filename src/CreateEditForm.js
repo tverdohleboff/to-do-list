@@ -9,6 +9,7 @@ function CreateEditForm(props) {
   const currentDate = new Date();
   const [name, setName] = useState('');
   const [date, setDate] = useState(currentDate.toLocaleDateString('en-CA'));
+  const [status, setStatus] = useState(false);
 
   function handleNameChange(event) {
     const value = event.target.value;
@@ -26,16 +27,22 @@ function CreateEditForm(props) {
       ...tasks,
       {
         name: name,
-        date: date
+        date: date,
+        status: status
       }
     ];
     createTask(updatedFutureTasks);
+    setName('');
+    setDate(currentDate.toLocaleDateString('en-CA'));
   }
 
   return (
     <div className='CreateEditForm'>
       <h2>Форма создания и редактирования дел</h2>
-      <form onSubmit={handleSubmitForm}>
+      <form 
+        className='CreateEditForm__container'
+        onSubmit={handleSubmitForm}
+      >
         <div>
           <label htmlFor='name'>Что нужно сделать</label>
           <input 

@@ -3,6 +3,7 @@ import Task from './Task';
 
 function FutureTasks(props) {
   const {
+    update,
     tasks
   } = props;
 
@@ -12,7 +13,12 @@ function FutureTasks(props) {
       <div className='FutureTasksList'>
         {tasks.map(function(task) {
           return (
-            <Task name={task.name} date={task.date} key={task.name} />
+            <Task 
+              name={task.name}
+              date={task.date}
+              key={task.name}
+              status={task.status} 
+            />
           );
         })}
       </div>
