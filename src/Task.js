@@ -1,17 +1,26 @@
 import React from 'react';
-import CheckBoxSwitchStatus from './CheckBoxSwitchStatus';
 
 function Task(props) {
   const {
     name,
+    id,
     date,
-    status
+    isChecked,
+    onCheckboxChange
   } = props;
+
+  function handleCheckboxChange(){
+    onCheckboxChange(id);
+  } 
 
   return (
     <div className='Task'>
-      <CheckBoxSwitchStatus />
-      <div className='Name'>{name} + {status}</div>
+      <input 
+        type='checkbox' 
+        onChange={handleCheckboxChange} 
+        checked={isChecked}
+      />
+      <div className='Name'>{name}</div>
       <div className='Date'>{date}</div>
     </div>
   );

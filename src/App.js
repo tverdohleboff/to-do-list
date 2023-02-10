@@ -7,14 +7,45 @@ import CreateEditForm from './CreateEditForm';
 function App() {
   const [futureTasks, setFutureTasks] = useState([]);
   console.log(futureTasks);
+  const [completedTasks, setCompletedTasks] = useState([]);
+
+  function moveToCompletedTasks(id) {
+    const updatedFutureTasks = futureTasks.filter(function(task){
+      return task.id !== id;
+    });
+    const task = futureTasks.find(function(task){
+      return task.id === id;
+    });
+    task.isChecked = true;
+    const updatedCompletedTasks = [...completedTasks, task];
+    setFutureTasks(updatedFutureTasks);
+    setCompletedTasks(updatedCompletedTasks);
+  }
+
+  function moveToFutureTasks(id) {
+    const updatedCompletedTasks = completedTasks.filter(function(task){
+      return task.id !== id;
+    });
+    const task = completedTasks.find(function(task){
+      return task.id === id;
+    });
+    task.isChecked = false;
+    const updatedFutureTasks = [...futureTasks, task];
+    setFutureTasks(updatedFutureTasks);
+    setCompletedTasks(updatedCompletedTasks);
+  }
 
   return (
     <div className='App'>
       <div className='lists'>
         <FutureTasks 
-        updateTask={setFutureTasks}
-        tasks={futureTasks} />
-        <CompletedTasks />
+          tasks={futureTasks} 
+          moveToCompletedTasks={moveToCompletedTasks}
+          />
+        <CompletedTasks
+          tasks={completedTasks}
+          moveToFutureTasks={moveToFutureTasks} 
+        />
       </div>
       <div className='form'>
         <CreateEditForm 

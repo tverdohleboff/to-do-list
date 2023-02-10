@@ -1,5 +1,7 @@
 import React, {useState} from 'react';
 
+let taskId = 1;
+
 function CreateEditForm(props) {
   const {
     createTask,
@@ -9,7 +11,8 @@ function CreateEditForm(props) {
   const currentDate = new Date();
   const [name, setName] = useState('');
   const [date, setDate] = useState(currentDate.toLocaleDateString('en-CA'));
-  const [status, setStatus] = useState(false);
+  const [errorName, setErrorName] = useState(false);
+  const [errorDate, setErrorDate] = useState(false);
 
   function handleNameChange(event) {
     const value = event.target.value;
@@ -23,17 +26,34 @@ function CreateEditForm(props) {
 
   function handleSubmitForm(event) {
     event.preventDefault();
-    const updatedFutureTasks = [
-      ...tasks,
-      {
-        name: name,
-        date: date,
-        status: status
-      }
-    ];
-    createTask(updatedFutureTasks);
-    setName('');
-    setDate(currentDate.toLocaleDateString('en-CA'));
+
+    if(name === '') {  
+      setErrorName('Имя не может быть пустым');
+    } else {
+      setErrorName(false);
+    }
+    
+    if(new Date(date + ' 23:59:59').getTime() < new Date().getTime() ) {
+      setErrorDate('Дата задачи не может быть раньше, чем сегодня');
+    } else {
+      setErrorDate(false);
+    }
+    
+    if(name !== '' &&  new Date(date + ' 23:59:59').getTime() >= new Date().getTime() ){
+      const updatedFutureTasks = [
+        ...tasks,
+        {
+          id: taskId,
+          name: name,
+          date: date,
+          isChecked: false
+        }
+      ];
+      taskId += 1;
+      createTask(updatedFutureTasks);
+      setName('');
+      setDate(currentDate.toLocaleDateString('en-CA'));
+    }
   }
 
   return (
@@ -52,6 +72,8 @@ function CreateEditForm(props) {
             value={name} 
             onChange={handleNameChange} 
           />
+          {errorName !== false ? <div className='Error'>
+            {errorName}</div> : null}
         </div>
         <div>
           <label htmlFor='date'>Когда нужно сделать</label>
@@ -62,6 +84,8 @@ function CreateEditForm(props) {
             value={date}
             onChange={handleDateChange} 
           />
+          {errorDate !== false ? <div className='Error'>
+            {errorDate}</div> : null}
         </div>
         <div>
           <button type='submit'>Создать</button>
