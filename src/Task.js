@@ -21,8 +21,11 @@ function Task(props) {
     }
   }
 
+  const className = isChecked ? 'Task Task_Checked' : 'Task';
+
+
   return (
-    <div className='Task'>
+    <div className={className}>
       <input 
         type='checkbox' 
         onChange={handleCheckboxChange} 

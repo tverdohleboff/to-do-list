@@ -14,7 +14,7 @@
   flex: 0 0 40%;
 }
 
-.FutureTasksList {
+.TasksList {
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -56,7 +56,7 @@ font-size: 0.8rem;;
   background-color: rgb(188, 255, 233);
 } 
 
-.CompletedTasksList .Name {
+.Task_Checked .Name {
 text-decoration: line-through;
 }
 

@@ -40,7 +40,7 @@ function CreateEditForm(props) {
     }
     
     if(name !== '' &&  new Date(date + ' 23:59:59').getTime() >= new Date().getTime() ){
-      const updatedFutureTasks = [
+      const updatedTasks = [
         ...tasks,
         {
           id: taskId,
@@ -50,7 +50,7 @@ function CreateEditForm(props) {
         }
       ];
       taskId += 1;
-      createTask(updatedFutureTasks);
+      createTask(updatedTasks);
       setName('');
       setDate(currentDate.toLocaleDateString('en-CA'));
     }

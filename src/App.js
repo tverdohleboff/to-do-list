@@ -1,87 +1,71 @@
 import './App.css';
 import React, {useState, useEffect} from 'react';
-import FutureTasks from './FutureTasks';
-import CompletedTasks from './CompletedTasks';
+import TasksList from './TasksList';
 import CreateEditForm from './CreateEditForm';
 
 function getFromLocalStorage(key){
   return JSON.parse(localStorage.getItem(key));
 }
 
-function syncWithLocalStorage(futureTasks, completedTasks){
-
-  const serializedFutureTasks = JSON.stringify(futureTasks);
-  const serializedCompletedTasks = JSON.stringify(completedTasks);
-
-  localStorage.setItem('futureTasks', serializedFutureTasks ); 
-  localStorage.setItem('completedTasks', serializedCompletedTasks); 
+function syncWithLocalStorage(tasks){
+  const serializedTasks = JSON.stringify(tasks);
+  localStorage.setItem('tasks', serializedTasks ); 
 }
 
 function App() {
-  const [futureTasks, setFutureTasks] = useState(getFromLocalStorage('futureTasks') || []);
-  const [completedTasks, setCompletedTasks] = useState(getFromLocalStorage('completedTasks') || []);
+  const [tasks, setTasks] = useState(getFromLocalStorage('tasks') || []);
 
   useEffect(function(){
-    syncWithLocalStorage(futureTasks, completedTasks);
-  }, [futureTasks, completedTasks]);
+    syncWithLocalStorage(tasks);
+  }, [tasks]);
 
-  function moveToCompletedTasks(id) {
-    const updatedFutureTasks = futureTasks.filter(function(task){
-      return task.id !== id;
-    });
-    const task = futureTasks.find(function(task){
+  function changeStatus(id) {
+    const updatedTasks = [...tasks];
+    const task = updatedTasks.find(function(task){
       return task.id === id;
     });
-    task.isChecked = true;
-    const updatedCompletedTasks = [...completedTasks, task];
-    setFutureTasks(updatedFutureTasks);
-    setCompletedTasks(updatedCompletedTasks);
+    task.isChecked = !task.isChecked;
+    setTasks(updatedTasks);
   }
 
-  function moveToFutureTasks(id) {
-    const updatedCompletedTasks = completedTasks.filter(function(task){
+  function deleteTask(id){
+    const updatedTasks = tasks.filter(function(task){
       return task.id !== id;
     });
-    const task = completedTasks.find(function(task){
-      return task.id === id;
-    });
-    task.isChecked = false;
-    const updatedFutureTasks = [...futureTasks, task];
-    setFutureTasks(updatedFutureTasks);
-    setCompletedTasks(updatedCompletedTasks);
+    setTasks(updatedTasks);
   }
 
-  function deleteFromCompletedTask(id){
-    const updatedCompletedTasks = completedTasks.filter(function(task){
-      return task.id !== id;
-    });
-    setCompletedTasks(updatedCompletedTasks);
-  }
+  const futureTasks = tasks.filter(function(task){
+    return task.isChecked === false;
+  })
 
-  function deleteFromFutureTask(id){
-    const updatedFutureTasks = futureTasks.filter(function(task){
-      return task.id !== id;
-    });
-    setFutureTasks(updatedFutureTasks);
-  }
+  const completedTasks = tasks.filter(function(task){
+    return task.isChecked === true;
+  })
 
   return (
     <div className='App'>
       <div className='lists'>
-        <FutureTasks 
-          tasks={futureTasks} 
-          moveToCompletedTasks={moveToCompletedTasks}
-          deleteTask={deleteFromFutureTask}
+        <div className='FutureTasks'>
+          <h2>Будущие задачи: </h2>
+          <TasksList
+            tasks={futureTasks} 
+            changeStatus={changeStatus}
+            deleteTask={deleteTask}
           />
-        <CompletedTasks
-          tasks={completedTasks}
-          moveToFutureTasks={moveToFutureTasks} 
-          deleteTask={deleteFromCompletedTask}
-        />
+        </div>
+        <div className='CompletedTasks'>
+          <h2>Завершенные задачи: </h2>
+          <TasksList
+            tasks={completedTasks} 
+            changeStatus={changeStatus}
+            deleteTask={deleteTask}
+          />
+        </div>
       </div>
       <div className='form'>
         <CreateEditForm 
-          createTask={setFutureTasks}
+          createTask={setTasks}
           tasks={futureTasks}
         />
       </div>
