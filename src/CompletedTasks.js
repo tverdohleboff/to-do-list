@@ -4,7 +4,8 @@ import Task from './Task';
 function CompletedTasks(props) {
   const {
     tasks,
-    moveToFutureTasks
+    moveToFutureTasks,
+    deleteTask
   } = props;
 
   return (
@@ -19,7 +20,8 @@ function CompletedTasks(props) {
               date={task.date}
               key={task.id}
               isChecked={task.isChecked} 
-              onCheckboxChange={moveToFutureTasks}
+              onChangeStatus={moveToFutureTasks}
+              onDelete={deleteTask}
             />
           );
         })}

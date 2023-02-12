@@ -6,12 +6,20 @@ function Task(props) {
     id,
     date,
     isChecked,
-    onCheckboxChange
+    onChangeStatus,
+    onDelete
   } = props;
 
   function handleCheckboxChange(){
-    onCheckboxChange(id);
+    onChangeStatus(id);
   } 
+
+  function handleDeleteButton(){
+    const deleteIsConfirmed = window.confirm("Удаляем?!");
+    if(deleteIsConfirmed) {
+      onDelete(id);
+    }
+  }
 
   return (
     <div className='Task'>
@@ -22,6 +30,13 @@ function Task(props) {
       />
       <div className='Name'>{name}</div>
       <div className='Date'>{date}</div>
+      <button 
+        className='deleteTask' 
+        type='button'
+        onClick={handleDeleteButton}
+      >
+        Удалить задачу
+      </button>
     </div>
   );
 }

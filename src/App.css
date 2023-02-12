@@ -23,6 +23,7 @@
 .Task {
   display: flex;
   flex-direction: row;
+  line-height: 2rem;
   gap: 10px;
   margin: 10px;
   align-items: center;
@@ -61,4 +62,12 @@ text-decoration: line-through;
 
 .Error {
   color:red
+}
+
+.deleteTask {
+  display: none;
+}
+
+.Task:hover .deleteTask {
+display: block;
 }

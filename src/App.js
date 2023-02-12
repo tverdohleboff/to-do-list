@@ -51,16 +51,32 @@ function App() {
     setCompletedTasks(updatedCompletedTasks);
   }
 
+  function deleteFromCompletedTask(id){
+    const updatedCompletedTasks = completedTasks.filter(function(task){
+      return task.id !== id;
+    });
+    setCompletedTasks(updatedCompletedTasks);
+  }
+
+  function deleteFromFutureTask(id){
+    const updatedFutureTasks = futureTasks.filter(function(task){
+      return task.id !== id;
+    });
+    setFutureTasks(updatedFutureTasks);
+  }
+
   return (
     <div className='App'>
       <div className='lists'>
         <FutureTasks 
           tasks={futureTasks} 
           moveToCompletedTasks={moveToCompletedTasks}
+          deleteTask={deleteFromFutureTask}
           />
         <CompletedTasks
           tasks={completedTasks}
           moveToFutureTasks={moveToFutureTasks} 
+          deleteTask={deleteFromCompletedTask}
         />
       </div>
       <div className='form'>
