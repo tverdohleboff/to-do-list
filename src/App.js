@@ -1,13 +1,29 @@
 import './App.css';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import FutureTasks from './FutureTasks';
 import CompletedTasks from './CompletedTasks';
 import CreateEditForm from './CreateEditForm';
 
+function getFromLocalStorage(key){
+  return JSON.parse(localStorage.getItem(key));
+}
+
+function syncWithLocalStorage(futureTasks, completedTasks){
+
+  const serializedFutureTasks = JSON.stringify(futureTasks);
+  const serializedCompletedTasks = JSON.stringify(completedTasks);
+
+  localStorage.setItem('futureTasks', serializedFutureTasks ); 
+  localStorage.setItem('completedTasks', serializedCompletedTasks); 
+}
+
 function App() {
-  const [futureTasks, setFutureTasks] = useState([]);
-  console.log(futureTasks);
-  const [completedTasks, setCompletedTasks] = useState([]);
+  const [futureTasks, setFutureTasks] = useState(getFromLocalStorage('futureTasks') || []);
+  const [completedTasks, setCompletedTasks] = useState(getFromLocalStorage('completedTasks') || []);
+
+  useEffect(function(){
+    syncWithLocalStorage(futureTasks, completedTasks);
+  }, [futureTasks, completedTasks]);
 
   function moveToCompletedTasks(id) {
     const updatedFutureTasks = futureTasks.filter(function(task){
