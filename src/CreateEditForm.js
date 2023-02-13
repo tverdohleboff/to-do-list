@@ -1,11 +1,10 @@
 import React, {useState} from 'react';
 
-let taskId = 1;
-
 function CreateEditForm(props) {
   const {
     tasks,
     createTask,
+    incrementTaskId
   } = props;
 
   const currentDate = new Date();
@@ -56,17 +55,16 @@ function CreateEditForm(props) {
       const updatedTasks = [
         ...tasks,
         {
-          id: taskId,
+          id: incrementTaskId(),
           name: name,
           date: date,
           isChecked: false
         }
       ];
-      taskId += 1;
       const sortedTasks = sortTasksByDate(updatedTasks);
       createTask(sortedTasks);
       setName('');
-      setDate(currentDate.toLocaleDateString('en-CA'));
+      setDate('');
     }
   }
 

@@ -12,11 +12,26 @@ function syncWithLocalStorage(tasks){
   localStorage.setItem('tasks', serializedTasks ); 
 }
 
+const tasksFromLocalStorage = getFromLocalStorage('tasks') || [];
+let biggestTaskId = 0;
+tasksFromLocalStorage.forEach(function(task){
+  if(task.id > biggestTaskId){
+    biggestTaskId = task.id;
+  }
+})
+
+let taskId = biggestTaskId || 0;
+function incrementTaskId(){
+  taskId = taskId + 1;
+  return taskId;
+}
+
 function App() {
-  const [tasks, setTasks] = useState(getFromLocalStorage('tasks') || []);
+  const [tasks, setTasks] = useState(tasksFromLocalStorage || []);
   const [searchText, setSearchText] = useState('');
 
   useEffect(function(){
+    console.log(tasks);
     syncWithLocalStorage(tasks);
   }, [tasks]);
 
@@ -49,8 +64,6 @@ function App() {
     }
     return task.isChecked === true;
   })
-
-
 
   function handleSearchInputChange(event) {
     const value = event.target.value;
@@ -88,8 +101,9 @@ function App() {
       </div>
       <div className='form'>
         <CreateEditForm 
-          tasks={futureTasks}
+          tasks={tasks}
           createTask={setTasks}
+          incrementTaskId={incrementTaskId}
         />
       </div>
     </div>
