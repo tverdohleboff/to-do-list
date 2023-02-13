@@ -23,7 +23,6 @@ function Task(props) {
 
   const className = isChecked ? 'Task Task_Checked' : 'Task';
 
-
   return (
     <div className={className}>
       <input 
@@ -31,8 +30,11 @@ function Task(props) {
         onChange={handleCheckboxChange} 
         checked={isChecked}
       />
+      <div className='Date'>{new Date(date).toLocaleString('ru-RU', {
+        dateStyle: 'short',
+        timeStyle: 'short'
+      })}</div>
       <div className='Name'>{name}</div>
-      <div className='Date'>{date}</div>
       <button 
         className='deleteTask' 
         type='button'

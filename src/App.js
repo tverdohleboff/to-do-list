@@ -65,8 +65,8 @@ function App() {
       </div>
       <div className='form'>
         <CreateEditForm 
-          createTask={setTasks}
           tasks={futureTasks}
+          createTask={setTasks}
         />
       </div>
     </div>

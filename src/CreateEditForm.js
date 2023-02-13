@@ -4,13 +4,13 @@ let taskId = 1;
 
 function CreateEditForm(props) {
   const {
+    tasks,
     createTask,
-    tasks
   } = props;
 
   const currentDate = new Date();
   const [name, setName] = useState('');
-  const [date, setDate] = useState(currentDate.toLocaleDateString('en-CA'));
+  const [date, setDate] = useState('');
   const [errorName, setErrorName] = useState(false);
   const [errorDate, setErrorDate] = useState(false);
 
@@ -24,6 +24,19 @@ function CreateEditForm(props) {
     setDate(value);
   }
 
+  function sortTasksByDate(tasks){
+    const sortedTasks =  tasks.sort(function(a, b){
+      if(new Date(a.date).getTime() > new Date(b.date).getTime()) {
+        return 1;
+      }
+      if(new Date(a.date).getTime() < new Date(b.date).getTime()) {
+        return -1;
+      }
+      return 0;
+    })
+    return sortedTasks;
+  }
+
   function handleSubmitForm(event) {
     event.preventDefault();
 
@@ -32,14 +45,14 @@ function CreateEditForm(props) {
     } else {
       setErrorName(false);
     }
-    
-    if(new Date(date + ' 23:59:59').getTime() < new Date().getTime() ) {
-      setErrorDate('Дата задачи не может быть раньше, чем сегодня');
+
+    if(date === '') {
+      setErrorDate('Дата задачи не может быть пустой');
     } else {
       setErrorDate(false);
     }
     
-    if(name !== '' &&  new Date(date + ' 23:59:59').getTime() >= new Date().getTime() ){
+    if(name !== '' &&  date !== ''){
       const updatedTasks = [
         ...tasks,
         {
@@ -50,7 +63,8 @@ function CreateEditForm(props) {
         }
       ];
       taskId += 1;
-      createTask(updatedTasks);
+      const sortedTasks = sortTasksByDate(updatedTasks);
+      createTask(sortedTasks);
       setName('');
       setDate(currentDate.toLocaleDateString('en-CA'));
     }
@@ -58,13 +72,13 @@ function CreateEditForm(props) {
 
   return (
     <div className='CreateEditForm'>
-      <h2>Форма создания и редактирования дел</h2>
+      <h2>Форма создания и редактирования дел: </h2>
       <form 
         className='CreateEditForm__container'
         onSubmit={handleSubmitForm}
       >
         <div>
-          <label htmlFor='name'>Что нужно сделать</label>
+          <label htmlFor='name'>Что нужно сделать </label>
           <input 
             type='text' 
             name='name' 
@@ -76,12 +90,14 @@ function CreateEditForm(props) {
             {errorName}</div> : null}
         </div>
         <div>
-          <label htmlFor='date'>Когда нужно сделать</label>
+          <label htmlFor='date'>Когда нужно сделать </label>
           <input 
-            type='date' 
+            type='datetime-local' 
             name='date' 
             id='date' 
             value={date}
+            min="2020-01-01T00:30" 
+            max="2040-12-31T23:30"
             onChange={handleDateChange} 
           />
           {errorDate !== false ? <div className='Error'>
