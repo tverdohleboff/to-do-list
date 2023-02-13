@@ -14,6 +14,7 @@ function syncWithLocalStorage(tasks){
 
 function App() {
   const [tasks, setTasks] = useState(getFromLocalStorage('tasks') || []);
+  const [searchText, setSearchText] = useState('');
 
   useEffect(function(){
     syncWithLocalStorage(tasks);
@@ -36,16 +37,38 @@ function App() {
   }
 
   const futureTasks = tasks.filter(function(task){
+    if(searchText !== ''){
+      return (task.isChecked === false && task.name.toLowerCase().includes(searchText.toLocaleLowerCase()))
+    }
     return task.isChecked === false;
   })
 
   const completedTasks = tasks.filter(function(task){
+    if(searchText !== ''){
+      return (task.isChecked === true && task.name.toLocaleLowerCase().includes(searchText.toLocaleLowerCase()))
+    }
     return task.isChecked === true;
   })
+
+
+
+  function handleSearchInputChange(event) {
+    const value = event.target.value;
+    setSearchText(value);
+  }
 
   return (
     <div className='App'>
       <div className='lists'>
+      <div className='search'>
+        <label htmlFor='search-form'> Найти задачу: </label>
+        <input 
+        type='text'
+        id='search-form'
+        value={searchText}
+        onChange={handleSearchInputChange}
+        />
+      </div>
         <div className='FutureTasks'>
           <h2>Будущие задачи: </h2>
           <TasksList
