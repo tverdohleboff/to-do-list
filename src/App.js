@@ -29,9 +29,9 @@ function incrementTaskId(){
 function App() {
   const [tasks, setTasks] = useState(tasksFromLocalStorage || []);
   const [searchText, setSearchText] = useState('');
+  const [editTaskId, setEditTaskId] = useState('');
 
   useEffect(function(){
-    console.log(tasks);
     syncWithLocalStorage(tasks);
   }, [tasks]);
 
@@ -49,18 +49,25 @@ function App() {
       return task.id !== id;
     });
     setTasks(updatedTasks);
+
+    if(editTaskId === id){
+      setEditTaskId('');
+      alert('Дело было удалено в процессе редактирования'); 
+    }
   }
 
   const futureTasks = tasks.filter(function(task){
     if(searchText !== ''){
-      return (task.isChecked === false && task.name.toLowerCase().includes(searchText.toLocaleLowerCase()))
+      return (task.isChecked === false 
+        && task.name.toLowerCase().includes(searchText.toLocaleLowerCase()))
     }
     return task.isChecked === false;
   })
 
   const completedTasks = tasks.filter(function(task){
     if(searchText !== ''){
-      return (task.isChecked === true && task.name.toLocaleLowerCase().includes(searchText.toLocaleLowerCase()))
+      return (task.isChecked === true 
+        && task.name.toLocaleLowerCase().includes(searchText.toLocaleLowerCase()))
     }
     return task.isChecked === true;
   })
@@ -88,6 +95,7 @@ function App() {
             tasks={futureTasks} 
             changeStatus={changeStatus}
             deleteTask={deleteTask}
+            setEditTaskId={setEditTaskId}
           />
         </div>
         <div className='CompletedTasks'>
@@ -96,14 +104,17 @@ function App() {
             tasks={completedTasks} 
             changeStatus={changeStatus}
             deleteTask={deleteTask}
+            setEditTaskId={setEditTaskId}
           />
         </div>
       </div>
       <div className='form'>
         <CreateEditForm 
           tasks={tasks}
-          createTask={setTasks}
+          setTasks={setTasks}
           incrementTaskId={incrementTaskId}
+          editTaskId={editTaskId}
+          setEditTaskId={setEditTaskId}
         />
       </div>
     </div>

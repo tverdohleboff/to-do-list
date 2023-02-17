@@ -5,6 +5,7 @@ function TasksList(props) {
   const {
     tasks,
     changeStatus,
+    setEditTaskId,
     deleteTask
   } = props;
 
@@ -19,6 +20,7 @@ function TasksList(props) {
             key={task.id}
             isChecked={task.isChecked} 
             onChangeStatus={changeStatus}
+            setEditTaskId={setEditTaskId}
             onDelete={deleteTask}
           />
         );

@@ -64,10 +64,10 @@ text-decoration: line-through;
   color:red
 }
 
-.deleteTask {
+.actionWithTask {
   display: none;
 }
 
-.Task:hover .deleteTask {
+.Task:hover .actionWithTask {
 display: block;
 }

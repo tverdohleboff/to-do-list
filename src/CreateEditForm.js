@@ -1,17 +1,33 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 
 function CreateEditForm(props) {
   const {
     tasks,
-    createTask,
-    incrementTaskId
+    setTasks,
+    incrementTaskId,
+    editTaskId,
+    setEditTaskId
   } = props;
 
-  const currentDate = new Date();
+  const isEdit = editTaskId !== '';
+
   const [name, setName] = useState('');
   const [date, setDate] = useState('');
   const [errorName, setErrorName] = useState(false);
   const [errorDate, setErrorDate] = useState(false);
+
+  useEffect(function(){
+    let task;
+    if(editTaskId !== ''){
+      task = tasks.find(function(item){
+        return item.id === editTaskId;
+      })
+      setName(task.name);
+      setDate(task.date);
+    } else {
+      clearFields();
+    }
+  }, [editTaskId]);
 
   function handleNameChange(event) {
     const value = event.target.value;
@@ -36,9 +52,7 @@ function CreateEditForm(props) {
     return sortedTasks;
   }
 
-  function handleSubmitForm(event) {
-    event.preventDefault();
-
+  function validateFields(){
     if(name === '') {  
       setErrorName('Имя не может быть пустым');
     } else {
@@ -50,27 +64,71 @@ function CreateEditForm(props) {
     } else {
       setErrorDate(false);
     }
-    
-    if(name !== '' &&  date !== ''){
-      const updatedTasks = [
-        ...tasks,
-        {
-          id: incrementTaskId(),
-          name: name,
-          date: date,
-          isChecked: false
-        }
-      ];
-      const sortedTasks = sortTasksByDate(updatedTasks);
-      createTask(sortedTasks);
-      setName('');
-      setDate('');
-    }
+
+    return name !== '' &&  date !== '';
   }
+
+  function clearFields(){
+    setName('');
+    setDate('');
+  }
+
+  function editTask(){
+    const updatedTasks = [
+      ...tasks
+    ]
+    const task = updatedTasks.find(function(item){
+      return item.id === editTaskId;
+    })
+    task.name = name;
+    task.date = date;
+    setTasks(updatedTasks);
+    clearFields();
+    setEditTaskId('');
+  }
+
+  function createTask(){
+    const updatedTasks = [
+      ...tasks,
+      {
+        id: incrementTaskId(),
+        name: name,
+        date: date,
+        isChecked: false
+      }
+    ];
+    const sortedTasks = sortTasksByDate(updatedTasks);
+    setTasks(sortedTasks);
+    clearFields();
+  }
+
+  function handleSubmitForm(event) {
+    event.preventDefault();
+    const validationSuccess = validateFields();
+    if(validationSuccess) {
+      if (isEdit) {
+        editTask();
+      } else {
+        createTask();
+      }
+    }
+  }  
+
+  function switchToCreateForm(){
+    setEditTaskId('');
+  }
+
+  const formTitle = isEdit ?
+  'Форма редактирования дела: ' :
+  'Форма создания дел: ';
+
+  const buttonText = isEdit ?
+  'Сохранить' :
+  'Создать';
 
   return (
     <div className='CreateEditForm'>
-      <h2>Форма создания и редактирования дел: </h2>
+      <h2>{formTitle}</h2>
       <form 
         className='CreateEditForm__container'
         onSubmit={handleSubmitForm}
@@ -102,7 +160,14 @@ function CreateEditForm(props) {
             {errorDate}</div> : null}
         </div>
         <div>
-          <button type='submit'>Создать</button>
+          <button type='submit'>{buttonText}</button>
+          {
+            isEdit ?
+              <button type='button' onClick={switchToCreateForm}>
+                Переключиться в режим создания
+              </button> :
+              null
+          }
         </div>
       </form>
     </div>

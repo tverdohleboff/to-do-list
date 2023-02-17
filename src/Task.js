@@ -7,6 +7,7 @@ function Task(props) {
     date,
     isChecked,
     onChangeStatus,
+    setEditTaskId,
     onDelete
   } = props;
 
@@ -19,6 +20,10 @@ function Task(props) {
     if(deleteIsConfirmed) {
       onDelete(id);
     }
+  }
+
+  function handleEditButton(){
+    setEditTaskId(id);
   }
 
   const className = isChecked ? 'Task Task_Checked' : 'Task';
@@ -36,11 +41,18 @@ function Task(props) {
       })}</div>
       <div className='Name'>{name}</div>
       <button 
-        className='deleteTask' 
+        className='editTask actionWithTask' 
+        type='button'
+        onClick={handleEditButton}
+      >
+        Редактировать
+      </button>
+      <button 
+        className='deleteTask actionWithTask' 
         type='button'
         onClick={handleDeleteButton}
       >
-        Удалить задачу
+        Удалить
       </button>
     </div>
   );
