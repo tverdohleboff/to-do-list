@@ -71,3 +71,7 @@ text-decoration: line-through;
 .Task:hover .actionWithTask {
 display: block;
 }
+
+.redText{
+  color: red;
+}
