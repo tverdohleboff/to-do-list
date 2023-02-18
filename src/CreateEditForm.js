@@ -82,7 +82,8 @@ function CreateEditForm(props) {
     })
     task.name = name;
     task.date = date;
-    setTasks(updatedTasks);
+    const sortedTasks = sortTasksByDate(updatedTasks);
+    setTasks(sortedTasks);
     clearFields();
     setEditTaskId('');
   }
