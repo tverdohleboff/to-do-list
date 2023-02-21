@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {getFromLocalStorage, syncWithLocalStorage} from './utils';
 
-const categoriesFromLocalStorage = getFromLocalStorage('categories') || [];
+const categoriesFromLocalStorage = getFromLocalStorage('categories');
 
 function CreateEditForm(props) {
   const {
@@ -147,11 +147,15 @@ function CreateEditForm(props) {
 
   function handleAddCategory(){
     const newCategory = prompt('Назовите категорию: ');
-    const updatedCategories = [
-      ...categories,
-      newCategory
-    ];
-    setCategories(updatedCategories);
+    if(newCategory){
+      const updatedCategories = [
+        ...categories,
+        newCategory
+      ];
+      setCategories(updatedCategories)
+    } else {
+      alert('Нельзя создать пустую категорию');
+    };
   }
 
   const formTitle = isEdit ?
