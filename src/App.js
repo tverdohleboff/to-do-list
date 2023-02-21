@@ -4,7 +4,7 @@ import TasksList from './TasksList';
 import CreateEditForm from './CreateEditForm';
 import {getFromLocalStorage, syncWithLocalStorage} from './utils';
 
-const tasksFromLocalStorage = getFromLocalStorage('tasks');
+const tasksFromLocalStorage = getFromLocalStorage('tasks') || [];
 let biggestTaskId = 0;
 tasksFromLocalStorage.forEach(function(task){
   if(task.id > biggestTaskId){
