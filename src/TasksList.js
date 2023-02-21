@@ -20,6 +20,7 @@ function TasksList(props) {
             key={task.id}
             isChecked={task.isChecked} 
             onChangeStatus={changeStatus}
+            category={task.category}
             setEditTaskId={setEditTaskId}
             onDelete={deleteTask}
           />

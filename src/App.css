@@ -60,10 +60,6 @@ font-size: 0.8rem;;
 text-decoration: line-through;
 }
 
-.Error {
-  color:red
-}
-
 .actionWithTask {
   display: none;
 }
@@ -74,4 +70,12 @@ display: block;
 
 .redText{
   color: red;
+}
+
+.categoryClass {
+  font-style: italic;
+}
+
+.Add-category-button{
+  margin-left: 10px;
 }

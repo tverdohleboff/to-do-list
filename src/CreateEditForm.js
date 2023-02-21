@@ -1,4 +1,7 @@
 import React, {useState, useEffect} from 'react';
+import {getFromLocalStorage, syncWithLocalStorage} from './utils';
+
+const categoriesFromLocalStorage = getFromLocalStorage('categories') || [];
 
 function CreateEditForm(props) {
   const {
@@ -11,8 +14,17 @@ function CreateEditForm(props) {
 
   const isEdit = editTaskId !== '';
 
+  const defaultCategories = [
+    'Работа',
+    'Дом',
+    'Спорт',
+    'Творчество'
+  ];
+
+  const [category, setCategory] = useState(defaultCategories[0]);
   const [name, setName] = useState('');
   const [date, setDate] = useState('');
+  const [categories, setCategories] = useState(categoriesFromLocalStorage || defaultCategories);
   const [errorName, setErrorName] = useState(false);
   const [errorDate, setErrorDate] = useState(false);
 
@@ -24,10 +36,15 @@ function CreateEditForm(props) {
       })
       setName(task.name);
       setDate(task.date);
+      setCategory(task.category);
     } else {
       clearFields();
     }
-  }, [editTaskId]);
+  }, [editTaskId, tasks]);
+
+  useEffect(function(){
+    syncWithLocalStorage('categories', categories);
+  }, [categories]);
 
   function handleNameChange(event) {
     const value = event.target.value;
@@ -37,6 +54,12 @@ function CreateEditForm(props) {
   function handleDateChange(event) {
     const value = event.target.value;
     setDate(value);
+  }
+
+  function handleCategoryChange(event) {
+    const value = event.target.value;
+
+    setCategory(value);
   }
 
   function sortTasksByDate(tasks){
@@ -71,6 +94,7 @@ function CreateEditForm(props) {
   function clearFields(){
     setName('');
     setDate('');
+    setCategory(defaultCategories[0]);
   }
 
   function editTask(){
@@ -82,6 +106,7 @@ function CreateEditForm(props) {
     })
     task.name = name;
     task.date = date;
+    task.category = category;
     const sortedTasks = sortTasksByDate(updatedTasks);
     setTasks(sortedTasks);
     clearFields();
@@ -95,6 +120,7 @@ function CreateEditForm(props) {
         id: incrementTaskId(),
         name: name,
         date: date,
+        category: category,
         isChecked: false
       }
     ];
@@ -119,6 +145,15 @@ function CreateEditForm(props) {
     setEditTaskId('');
   }
 
+  function handleAddCategory(){
+    const newCategory = prompt('Назовите категорию: ');
+    const updatedCategories = [
+      ...categories,
+      newCategory
+    ];
+    setCategories(updatedCategories);
+  }
+
   const formTitle = isEdit ?
   'Форма редактирования дела: ' :
   'Форма создания дел: ';
@@ -135,6 +170,27 @@ function CreateEditForm(props) {
         onSubmit={handleSubmitForm}
       >
         <div>
+        <label htmlFor='category'>Категория </label>
+          <select 
+            id='category'
+            value={category}
+            onChange={handleCategoryChange}>   
+            {
+              categories.map(function(option) {
+                return (
+                  <option key={option}
+                  value={option}>{option}</option>
+                )
+              })
+            }
+          </select>
+          <button 
+            className='Add-category-button' 
+            type='button'
+            onClick={handleAddCategory}
+          >+</button>
+        </div>
+        <div>
           <label htmlFor='name'>Что нужно сделать </label>
           <input 
             type='text' 
@@ -143,7 +199,7 @@ function CreateEditForm(props) {
             value={name} 
             onChange={handleNameChange} 
           />
-          {errorName !== false ? <div className='Error'>
+          {errorName !== false ? <div className='redText'>
             {errorName}</div> : null}
         </div>
         <div>
@@ -157,7 +213,7 @@ function CreateEditForm(props) {
             max="2040-12-31T23:30"
             onChange={handleDateChange} 
           />
-          {errorDate !== false ? <div className='Error'>
+          {errorDate !== false ? <div className='redText'>
             {errorDate}</div> : null}
         </div>
         <div>

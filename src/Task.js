@@ -7,6 +7,7 @@ function Task(props) {
     date,
     isChecked,
     onChangeStatus,
+    category,
     setEditTaskId,
     onDelete
   } = props;
@@ -43,6 +44,7 @@ function Task(props) {
         dateStyle: 'short',
         timeStyle: 'short'
       })}</div>
+      <div className='categoryClass'>{category}</div>
       <div className={nameClassName}>{name}</div>
       <button 
         className='editTask actionWithTask' 

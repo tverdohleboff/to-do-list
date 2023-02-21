@@ -2,15 +2,7 @@ import './App.css';
 import React, {useState, useEffect} from 'react';
 import TasksList from './TasksList';
 import CreateEditForm from './CreateEditForm';
-
-function getFromLocalStorage(key){
-  return JSON.parse(localStorage.getItem(key));
-}
-
-function syncWithLocalStorage(tasks){
-  const serializedTasks = JSON.stringify(tasks);
-  localStorage.setItem('tasks', serializedTasks ); 
-}
+import {getFromLocalStorage, syncWithLocalStorage} from './utils';
 
 const tasksFromLocalStorage = getFromLocalStorage('tasks') || [];
 let biggestTaskId = 0;
@@ -32,7 +24,7 @@ function App() {
   const [editTaskId, setEditTaskId] = useState('');
 
   useEffect(function(){
-    syncWithLocalStorage(tasks);
+    syncWithLocalStorage('tasks', tasks);
   }, [tasks]);
 
   function changeStatus(id) {
