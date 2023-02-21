@@ -1,12 +1,81 @@
 .App {
   display: flex;
   flex-direction: row;
+  padding: 10px;
 }
 
-.Form {
-  padding: 2rem;
-  flex: 0 1 50%;
+.lists {
+  flex: 0 0 60%;
   display: flex;
   flex-direction: column;
-  height: 80vmin;
+}
+
+.form {
+  flex: 0 0 40%;
+}
+
+.TasksList {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.Task {
+  display: flex;
+  flex-direction: row;
+  line-height: 2rem;
+  gap: 10px;
+  margin: 10px;
+  align-items: center;
+}
+
+.Date {
+font-size: 0.8rem;;
+}
+
+.CreateEditForm__container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.CheckBoxStatus {
+  width: 40px;
+  height: 40px;
+}
+
+.CheckBoxStatus__button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 0;
+  background-color: rgb(232, 250, 244);
+}
+
+.CheckBoxStatus__button:hover {
+  background-color: rgb(188, 255, 233);
+} 
+
+.Task_Checked .Name {
+text-decoration: line-through;
+}
+
+.actionWithTask {
+  display: none;
+}
+
+.Task:hover .actionWithTask {
+display: block;
+}
+
+.redText{
+  color: red;
+}
+
+.categoryClass {
+  font-style: italic;
+}
+
+.Add-category-button{
+  margin-left: 10px;
 }
