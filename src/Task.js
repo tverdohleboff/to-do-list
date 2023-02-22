@@ -17,7 +17,7 @@ function Task(props) {
   } 
 
   function handleDeleteButton(){
-    const deleteIsConfirmed = window.confirm("Удаляем?!");
+    const deleteIsConfirmed = window.confirm("Удаляем дело?!");
     if(deleteIsConfirmed) {
       onDelete(id);
     }

@@ -21,9 +21,9 @@ function CreateEditForm(props) {
     'Творчество'
   ];
 
-  const [category, setCategory] = useState(defaultCategories[0]);
   const [name, setName] = useState('');
   const [date, setDate] = useState('');
+  const [category, setCategory] = useState(defaultCategories[0]);
   const [categories, setCategories] = useState(categoriesFromLocalStorage || defaultCategories);
   const [errorName, setErrorName] = useState(false);
   const [errorDate, setErrorDate] = useState(false);
@@ -36,6 +36,15 @@ function CreateEditForm(props) {
       })
       setName(task.name);
       setDate(task.date);
+      if(categories.includes(task.category)) {
+        return;
+      } else {
+        const updatedCategories = [
+          ...categories,
+          task.category
+        ];
+        setCategories(updatedCategories);
+      }
       setCategory(task.category);
     } else {
       clearFields();
@@ -58,7 +67,6 @@ function CreateEditForm(props) {
 
   function handleCategoryChange(event) {
     const value = event.target.value;
-
     setCategory(value);
   }
 
@@ -152,10 +160,25 @@ function CreateEditForm(props) {
         ...categories,
         newCategory
       ];
-      setCategories(updatedCategories)
+      setCategories(updatedCategories);
     } else {
       alert('Нельзя создать пустую категорию');
     };
+  }
+
+  function handleDeleteCategory(){
+    const deleteIsConfirmed = window.confirm("Удаляем категорию?!");
+    if(deleteIsConfirmed) {
+      const copyCategoryies = [
+        ...categories
+      ];
+      const indexForDeleted = copyCategoryies.indexOf(category);
+      if(indexForDeleted !== -1) {
+        copyCategoryies.splice(indexForDeleted, 1);
+        setCategories(copyCategoryies);
+        setCategory(categories[0]);
+      }
+    } 
   }
 
   const formTitle = isEdit ?
@@ -193,6 +216,11 @@ function CreateEditForm(props) {
             type='button'
             onClick={handleAddCategory}
           >+</button>
+          <button 
+            className='margin-left-10' 
+            type='button'
+            onClick={handleDeleteCategory}
+          >-</button>
         </div>
         <div>
           <label htmlFor='name'>Что нужно сделать </label>
