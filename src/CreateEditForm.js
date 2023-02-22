@@ -189,7 +189,7 @@ function CreateEditForm(props) {
             }
           </select>
           <button 
-            className='Add-category-button' 
+            className='margin-left-10' 
             type='button'
             onClick={handleAddCategory}
           >+</button>
@@ -224,7 +224,7 @@ function CreateEditForm(props) {
           <button type='submit'>{buttonText}</button>
           {
             isEdit ?
-              <button type='button' onClick={switchToCreateForm}>
+              <button className='margin-left-10' type='button' onClick={switchToCreateForm}>
                 Переключиться в режим создания
               </button> :
               null
