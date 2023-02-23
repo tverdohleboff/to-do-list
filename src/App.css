@@ -4,6 +4,24 @@
   padding: 10px;
 }
 
+.sortButtons {
+  margin: 25px 10px 10px 25px;
+  display: flex;
+  gap: 20px;
+}
+
+.activeSortButton {
+  background-color: rgb(80, 80, 251);
+  color: aliceblue;
+  border: 0;
+}
+
+.activeFilterButton {
+  background-color: rgb(252, 228, 94);
+  color: black;
+  border: 0;
+}
+
 .lists {
   flex: 0 0 60%;
   display: flex;

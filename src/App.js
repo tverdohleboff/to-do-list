@@ -1,8 +1,23 @@
 import './App.css';
 import React, {useState, useEffect} from 'react';
+import SortButtons from './SortButtons';
 import TasksList from './TasksList';
 import CreateEditForm from './CreateEditForm';
-import {getFromLocalStorage, syncWithLocalStorage} from './utils';
+import {
+  getFromLocalStorage, 
+  syncWithLocalStorage, 
+  sortTasksByDate, 
+  sortTasksByCategory, 
+  sortTasksByPriority, 
+  filterTasksByExpired,
+  searchTasksByName
+} from './utils';
+import {
+  BY_CATEGORY, 
+  BY_DATE, 
+  BY_EXPIRED, 
+  BY_PRIORITY
+} from './constants';
 
 const tasksFromLocalStorage = getFromLocalStorage('tasks') || [];
 let biggestTaskId = 0;
@@ -22,6 +37,8 @@ function App() {
   const [tasks, setTasks] = useState(tasksFromLocalStorage || []);
   const [searchText, setSearchText] = useState('');
   const [editTaskId, setEditTaskId] = useState('');
+  const [sortOrder, setSortOrder] = useState(BY_DATE);
+  const [filter, setFilter] = useState(null);
 
   useEffect(function(){
     syncWithLocalStorage('tasks', tasks);
@@ -48,26 +65,44 @@ function App() {
     }
   }
 
-  const futureTasks = tasks.filter(function(task){
-    if(searchText !== ''){
-      return (task.isChecked === false 
-        && task.name.toLowerCase().includes(searchText.toLocaleLowerCase()))
-    }
-    return task.isChecked === false;
-  })
-
-  const completedTasks = tasks.filter(function(task){
-    if(searchText !== ''){
-      return (task.isChecked === true 
-        && task.name.toLocaleLowerCase().includes(searchText.toLocaleLowerCase()))
-    }
-    return task.isChecked === true;
-  })
-
   function handleSearchInputChange(event) {
     const value = event.target.value;
     setSearchText(value);
   }
+
+  function sortAndFilterTasks(tasks){
+    let updatedTasks = [
+      ...tasks
+    ]
+    
+    if(sortOrder === BY_DATE) {
+      updatedTasks = sortTasksByDate(updatedTasks);
+    } else if (sortOrder === BY_CATEGORY) {
+      updatedTasks = sortTasksByCategory(updatedTasks);
+    } else if (sortOrder === BY_PRIORITY) {
+      updatedTasks = sortTasksByPriority(updatedTasks);
+    }
+
+    if(filter === BY_EXPIRED) {
+      updatedTasks = filterTasksByExpired(updatedTasks);
+    }
+
+    if(searchText !== ''){
+      updatedTasks = searchTasksByName(updatedTasks, searchText);
+    }
+
+    return updatedTasks;
+  }
+
+  let futureTasks = tasks.filter(function(task){
+    return task.isChecked === false;
+  })
+  futureTasks = sortAndFilterTasks(futureTasks);
+
+  let completedTasks = tasks.filter(function(task){
+    return task.isChecked === true;
+  })
+  completedTasks = sortAndFilterTasks(completedTasks);
 
   return (
     <div className='App'>
@@ -81,24 +116,30 @@ function App() {
         onChange={handleSearchInputChange}
         />
       </div>
-        <div className='FutureTasks'>
-          <h2>Будущие задачи: </h2>
-          <TasksList
-            tasks={futureTasks} 
-            changeStatus={changeStatus}
-            deleteTask={deleteTask}
-            setEditTaskId={setEditTaskId}
-          />
-        </div>
-        <div className='CompletedTasks'>
-          <h2>Завершенные задачи: </h2>
-          <TasksList
-            tasks={completedTasks} 
-            changeStatus={changeStatus}
-            deleteTask={deleteTask}
-            setEditTaskId={setEditTaskId}
-          />
-        </div>
+      <SortButtons 
+        sortOrder={sortOrder}
+        setSortOrder={setSortOrder}
+        filter={filter}
+        setFilter={setFilter}
+      />
+      <div className='FutureTasks'>
+        <h2>Будущие задачи: </h2>
+        <TasksList
+          tasks={futureTasks} 
+          changeStatus={changeStatus}
+          deleteTask={deleteTask}
+          setEditTaskId={setEditTaskId}
+        />
+      </div>
+      <div className='CompletedTasks'>
+        <h2>Завершенные задачи: </h2>
+        <TasksList
+          tasks={completedTasks} 
+          changeStatus={changeStatus}
+          deleteTask={deleteTask}
+          setEditTaskId={setEditTaskId}
+        />
+      </div>
       </div>
       <div className='form'>
         <CreateEditForm 

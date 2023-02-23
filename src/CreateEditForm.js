@@ -9,7 +9,7 @@ function CreateEditForm(props) {
     setTasks,
     incrementTaskId,
     editTaskId,
-    setEditTaskId
+    setEditTaskId,
   } = props;
 
   const isEdit = editTaskId !== '';
@@ -84,19 +84,6 @@ function CreateEditForm(props) {
     setCategory(value);
   }
 
-  function sortTasksByDate(tasks){
-    const sortedTasks =  tasks.sort(function(a, b){
-      if(new Date(a.date).getTime() > new Date(b.date).getTime()) {
-        return 1;
-      }
-      if(new Date(a.date).getTime() < new Date(b.date).getTime()) {
-        return -1;
-      }
-      return 0;
-    })
-    return sortedTasks;
-  }
-
   function validateFields(){
     if(name === '') {  
       setErrorName('Имя не может быть пустым');
@@ -130,10 +117,10 @@ function CreateEditForm(props) {
     task.date = date;
     task.category = category;
     task.priority = priority;
-    const sortedTasks = sortTasksByDate(updatedTasks);
-    setTasks(sortedTasks);
+    setTasks(updatedTasks);
     clearFields();
     setEditTaskId('');
+    setPriority(priorities[0]);
   }
 
   function createTask(){
@@ -148,9 +135,9 @@ function CreateEditForm(props) {
         isChecked: false
       }
     ];
-    const sortedTasks = sortTasksByDate(updatedTasks);
-    setTasks(sortedTasks);
+    setTasks(updatedTasks);
     clearFields();
+    setPriority(priorities[0]);
   }
 
   function handleSubmitForm(event) {
