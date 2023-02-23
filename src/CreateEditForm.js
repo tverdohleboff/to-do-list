@@ -51,9 +51,7 @@ function CreateEditForm(props) {
       })
       setName(task.name);
       setDate(task.date);
-      if(categories.includes(task.category)) {
-        return;
-      } else {
+      if(categories.includes(task.category) === false) {
         const updatedCategories = [
           ...categories,
           task.category
@@ -61,6 +59,7 @@ function CreateEditForm(props) {
         setCategories(updatedCategories);
       }
       setCategory(task.category);
+      setPriority(task.priority);
     } else {
       clearFields();
     }
