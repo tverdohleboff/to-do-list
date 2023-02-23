@@ -21,12 +21,27 @@ function CreateEditForm(props) {
     'Творчество'
   ];
 
+  const priorities = [
+    'Обычный',
+    'Высокий',
+    'Низкий'
+  ];
+
   const [name, setName] = useState('');
   const [date, setDate] = useState('');
   const [category, setCategory] = useState(defaultCategories[0]);
   const [categories, setCategories] = useState(categoriesFromLocalStorage || defaultCategories);
+  const [priority, setPriority] = useState(priorities[0]);
   const [errorName, setErrorName] = useState(false);
   const [errorDate, setErrorDate] = useState(false);
+  
+  const formTitle = isEdit ?
+  'Форма редактирования дела: ' :
+  'Форма создания дел: ';
+
+  const buttonText = isEdit ?
+  'Сохранить' :
+  'Создать';
 
   useEffect(function(){
     let task;
@@ -115,6 +130,7 @@ function CreateEditForm(props) {
     task.name = name;
     task.date = date;
     task.category = category;
+    task.priority = priority;
     const sortedTasks = sortTasksByDate(updatedTasks);
     setTasks(sortedTasks);
     clearFields();
@@ -129,6 +145,7 @@ function CreateEditForm(props) {
         name: name,
         date: date,
         category: category,
+        priority: priority,
         isChecked: false
       }
     ];
@@ -181,13 +198,10 @@ function CreateEditForm(props) {
     } 
   }
 
-  const formTitle = isEdit ?
-  'Форма редактирования дела: ' :
-  'Форма создания дел: ';
-
-  const buttonText = isEdit ?
-  'Сохранить' :
-  'Создать';
+  function handlePriorityChange(event){
+    const value = event.target.value;
+    setPriority(value);
+  }
 
   return (
     <div className='CreateEditForm'>
@@ -248,6 +262,22 @@ function CreateEditForm(props) {
           {errorDate !== false ? <div className='redText'>
             {errorDate}</div> : null}
         </div>
+        <div className='priority'>
+        <label htmlFor='priority'>Приоритет </label>
+          <select 
+            id='priority'
+            value={priority}
+            onChange={handlePriorityChange}>   
+            {
+              priorities.map(function(selection) {
+                return (
+                  <option key={selection}
+                  value={selection}>{selection}</option>
+                )
+              })
+            }
+          </select>
+          </div>
         <div>
           <button type='submit'>{buttonText}</button>
           {

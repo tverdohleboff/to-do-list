@@ -8,6 +8,7 @@ function Task(props) {
     isChecked,
     onChangeStatus,
     category,
+    priority,
     setEditTaskId,
     onDelete
   } = props;
@@ -29,7 +30,12 @@ function Task(props) {
  
   const isExpired = new Date(date).getTime() < new Date().getTime();
 
-  const className = isChecked ? 'Task Task_Checked' : 'Task';
+  let className = isChecked ? 'Task Task_Checked' : 'Task';
+  if(priority === 'Высокий') {
+    className = className + ' high';
+  } else if(priority === 'Низкий') {
+    className = className + ' low';
+  }
   const dateClassName = isExpired ? 'Date redText' : 'Date';
   const nameClassName = isExpired ? 'Name redText' : 'Name';
 

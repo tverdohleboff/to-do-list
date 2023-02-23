@@ -79,3 +79,16 @@ display: block;
 .margin-left-10 {
   margin-left: 10px;
 }
+
+.priority {
+  display: flex;
+  gap: 10px;
+}
+
+.high {
+ background-color: rgba(167, 255, 226, 0.733);
+}
+
+.low {
+background-color: rgba(176, 176, 176, 0.905);
+}
